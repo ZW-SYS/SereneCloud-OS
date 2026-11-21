@@ -6,8 +6,8 @@ set -e
 dpkg-divert --local --rename --add /usr/lib/os-release
 cp /usr/share/serenecloud/os-release /usr/lib/os-release
 ln -sf ../usr/lib/os-release /etc/os-release
-echo "SereneCloud OS 0.1 \\n \\l" > /etc/issue
-echo "SereneCloud OS 0.1" > /etc/issue.net
+echo "SereneCloud OS 0.1.1 \\n \\l" > /etc/issue
+echo "SereneCloud OS 0.1.1" > /etc/issue.net
 
 # 2) 配色：基于 Breeze Light，换成云安蓝 #4F8CC9
 cp /usr/share/color-schemes/BreezeLight.colors /usr/share/color-schemes/SereneCloud.colors
@@ -40,3 +40,6 @@ locale-gen
 update-locale LANG=zh_CN.UTF-8
 
 gtk-update-icon-cache -f /usr/share/icons/hicolor || true
+
+# 7) 不自动弹出 KDE 欢迎中心（在应用菜单里还能打开）
+rm -f /etc/xdg/autostart/org.kde.plasma-welcome.desktop

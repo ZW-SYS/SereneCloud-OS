@@ -1,0 +1,24 @@
+#!/bin/sh
+# U 盘开机菜单：换成云安 OS 的名字和背景图，5 秒后自动启动
+# （这个脚本在 binary/ 目录里运行，在生成 ISO 之前）
+set -e
+cp ../config/includes.binary/boot/grub/splash.png boot/grub/splash.png 2>/dev/null || true
+if [ -d isolinux ]; then cp ../config/includes.binary/isolinux/splash.png isolinux/splash.png 2>/dev/null || true; fi
+for f in boot/grub/*.cfg boot/grub/live-theme/theme.txt isolinux/*.cfg; do
+  [ -f "$f" ] || continue
+  sed -i -e 's|Debian GNU/Linux|SereneCloud OS|g' \
+         -e 's|Live system (\([^)]*\) fail-safe mode)|SereneCloud OS (safe mode)|g' \
+         -e 's|Live system (\([^)]*\))|Start SereneCloud OS|g' \
+         -e 's|Live system|SereneCloud OS|g' "$f"
+done
+if [ -f boot/grub/live-theme/theme.txt ]; then sed -i 's|^title-text:.*|title-text: ""|' boot/grub/live-theme/theme.txt; fi
+# GRUB（UEFI 和传统 BIOS 都用它）：5 秒自动启动第一项
+if [ -f boot/grub/config.cfg ]; then
+  sed -i '/^set timeout=/d' boot/grub/config.cfg
+  printf '\nset timeout=5\nset timeout_style=menu\n' >> boot/grub/config.cfg
+fi
+# isolinux（老式 BIOS 光盘启动）：单位是 1/10 秒
+for f in isolinux/isolinux.cfg isolinux/syslinux.cfg; do
+  if [ -f "$f" ]; then sed -i 's/^timeout .*/timeout 50/' "$f"; fi
+done
+echo "开机菜单："; grep -h "menuentry\|timeout" boot/grub/grub.cfg boot/grub/config.cfg 2>/dev/null | head -20 || true

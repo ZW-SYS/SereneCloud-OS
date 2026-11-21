@@ -69,6 +69,33 @@ jobs:
           sudo udevadm control --reload-rules && sudo udevadm trigger --name-match=kvm || true
           tests/boot-test.sh out/*.iso test-out
 
+      - name: 录制演示视频（开机 → 桌面 → 打开软件）
+        continue-on-error: true
+        run: |
+          sudo apt-get install -y ffmpeg
+          tests/demo-video.sh out/*.iso demo-out
+
+      - name: 上传演示视频
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: demo-video
+          path: demo-out/
+          if-no-files-found: ignore
+
+      - name: 更新「CI 预览」（截图和视频，方便检查）
+        if: github.ref == 'refs/heads/main'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ci-preview
+          name: CI 预览：最新一次自动测试的截图和演示视频
+          prerelease: true
+          make_latest: false
+          body: "这里只放自动测试的截图和演示视频（每次推送 main 自动更新），不是正式版本。下载系统请看正式的 v* 版本。"
+          files: |
+            demo-out/*
+            test-out/*.png
+
       - name: 上传测试截图和日志
         if: always()
         uses: actions/upload-artifact@v4
@@ -107,3 +134,4 @@ jobs:
           files: |
             out/*
             test-out/*.png
+            demo-out/*

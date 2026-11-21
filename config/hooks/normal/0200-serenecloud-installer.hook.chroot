@@ -9,8 +9,8 @@ if [ -d "$B/debian" ]; then
   sed -i -e 's/^componentName:.*/componentName:  serenecloud/' \
          -e 's/^\( *productName:\).*/\1         "SereneCloud OS"/' \
          -e 's/^\( *shortProductName:\).*/\1    "SereneCloud"/' \
-         -e 's/^\( *versionedName:\).*/\1       "SereneCloud OS 0.1"/' \
-         -e 's/^\( *shortVersionedName:\).*/\1  "SereneCloud 0.1"/' \
+         -e 's/^\( *versionedName:\).*/\1       "SereneCloud OS 0.1.1"/' \
+         -e 's/^\( *shortVersionedName:\).*/\1  "SereneCloud 0.1.1"/' \
          -e 's/^\( *bootloaderEntryName:\).*/\1 "SereneCloud"/' \
          -e 's|^\( *productUrl:\).*|\1          "https://github.com/ZW-SYS/SereneCloud-OS"|' \
          -e 's|^\( *supportUrl:\).*|\1          "https://github.com/ZW-SYS/SereneCloud-OS/issues"|' \
@@ -27,3 +27,13 @@ if [ -f "$U" ]; then
   grep -q '^sudoersGroup:' "$U" && sed -i 's/^sudoersGroup:.*/sudoersGroup: sudo/' "$U" || echo 'sudoersGroup: sudo' >> "$U"
   sed -i 's/^doAutologin:.*/doAutologin: false/' "$U"
 fi
+
+# 「Install Debian」图标 → 「安装云安 OS」（桌面上的图标就是从这个文件复制的）
+for f in /usr/share/applications/install-debian.desktop /usr/share/applications/calamares.desktop; do
+  [ -f "$f" ] || continue
+  sed -i -e '/^Name\[/d' -e '/^GenericName\[/d' -e '/^Comment\[/d' -e '/^Keywords\[/d' \
+         -e 's/^Name=.*/Name=安装云安 OS/' \
+         -e 's/^GenericName=.*/GenericName=系统安装器/' \
+         -e 's/^Comment=.*/Comment=把云安 OS 安装到电脑硬盘上/' \
+         -e 's/^Icon=.*/Icon=serenecloud/' "$f"
+done
