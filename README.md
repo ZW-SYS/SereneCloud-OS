@@ -46,7 +46,13 @@
   <img src="docs/images/wallpaper.jpg" width="720" alt="云安壁纸">
 </p>
 
-<!-- SCREENSHOTS -->
+## 🖥️ 桌面
+
+这是 v0.1.0 在虚拟机里自动开机后的真实截图：云安壁纸、桌面上的「Root 终端」、底部任务栏，欢迎中心里显示的就是 SereneCloud OS。
+
+<p align="center">
+  <img src="docs/images/desktop.png" width="720" alt="云安 OS 桌面">
+</p>
 
 ---
 
