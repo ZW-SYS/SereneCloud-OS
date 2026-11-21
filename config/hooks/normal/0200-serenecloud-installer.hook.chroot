@@ -29,7 +29,7 @@ if [ -f "$U" ]; then
 fi
 
 # 「Install Debian」图标 → 「安装云安 OS」（桌面上的图标就是从这个文件复制的）
-for f in /usr/share/applications/install-debian.desktop /usr/share/applications/calamares.desktop; do
+for f in /usr/share/applications/calamares-install-debian.desktop /usr/share/applications/install-debian.desktop /usr/share/applications/calamares.desktop; do
   [ -f "$f" ] || continue
   sed -i -e '/^Name\[/d' -e '/^GenericName\[/d' -e '/^Comment\[/d' -e '/^Keywords\[/d' \
          -e 's/^Name=.*/Name=安装云安 OS/' \
@@ -37,3 +37,5 @@ for f in /usr/share/applications/install-debian.desktop /usr/share/applications/
          -e 's/^Comment=.*/Comment=把云安 OS 安装到电脑硬盘上/' \
          -e 's/^Icon=.*/Icon=serenecloud/' "$f"
 done
+# 自动放图标的脚本里写死了 "Install Debian"（LXDE 用），也一起改掉
+[ -f /usr/bin/add-calamares-desktop-icon ] && sed -i 's/Install Debian/安装云安 OS/; s/Icon=install-debian/Icon=serenecloud/' /usr/bin/add-calamares-desktop-icon || true

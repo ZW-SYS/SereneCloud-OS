@@ -75,7 +75,7 @@ type_text "print('Hello, SereneCloud OS!')"; sleep 4
 key meta_l-pgdn; sleep 3
 
 echo "6) 安装器"
-run "kioclient exec /usr/share/applications/install-debian.desktop"; sleep 25
+run "calamares-install-debian"; sleep 25
 
 kill $CAP 2>/dev/null; kill $QPID 2>/dev/null; wait $QPID 2>/dev/null
 kill "$KEYS_PID" 2>/dev/null || true

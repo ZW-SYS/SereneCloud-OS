@@ -6,7 +6,7 @@
 设计：天青色渐变天空，几朵柔和的云从四周飘向中心，汇聚后化成 "SereneCloud" 字样。
 """
 import math, os, random
-from PIL import Image, ImageDraw, ImageFilter, ImageFont
+from PIL import Image, ImageChops, ImageDraw, ImageFilter, ImageFont
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 INC = os.path.join(ROOT, "config", "includes.chroot")
@@ -72,12 +72,26 @@ def text_layer(w, h, size, alpha):
     return layer
 
 
+def edge_mask(w, h, margin=70):
+    """边缘渐隐：云从画面外飘进来时慢慢出现，不会被切成直边。"""
+    m = Image.new("L", (w, h), 0)
+    px = m.load()
+    for y in range(h):
+        for x in range(w):
+            d = min(x, y, w - 1 - x, h - 1 - y) / margin
+            d = max(0.0, min(1.0, d))
+            px[x, y] = int(255 * d * d * (3 - 2 * d))
+    return m
+
+
 def plymouth_frames(n=60, w=800, h=300):
     """开机动画帧（透明背景，脚本把它们放在屏幕中央）。
     0-34 帧：云从四周飘向中心；35-49 帧：云淡出、字样浮现；50-59 帧：字样呼吸光。"""
     os.makedirs(PLY, exist_ok=True)
     starts = [(-0.35, 0.15), (1.1, 0.05), (-0.3, 0.75), (1.05, 0.8), (0.5, -0.5), (0.5, 1.3)]
     sprites = [cloud_sprite(0.55 + 0.1 * (i % 3), i) for i in range(len(starts))]
+    global MASK
+    MASK = edge_mask(w, h)
     for f in range(n):
         frame = Image.new("RGBA", (w, h), (0, 0, 0, 0))
         move = ease(min(1, f / 34))
@@ -88,6 +102,7 @@ def plymouth_frames(n=60, w=800, h=300):
             a = sp.copy()
             a.putalpha(a.getchannel("A").point(lambda v: int(v * (1 - fade) * 0.9)))
             frame.alpha_composite(a, (int(cx - sp.width / 2), int(cy - sp.height / 2)))
+        frame.putalpha(ImageChops.multiply(frame.getchannel("A"), MASK))
         if f >= 30:
             ta = min(1.0, (f - 30) / 18)
             if f >= 50:

@@ -42,4 +42,12 @@ update-locale LANG=zh_CN.UTF-8
 gtk-update-icon-cache -f /usr/share/icons/hicolor || true
 
 # 7) 不自动弹出 KDE 欢迎中心（在应用菜单里还能打开）
+# Plasma 6 里欢迎中心是由 kded 模块在第一次登录时打开的
 rm -f /etc/xdg/autostart/org.kde.plasma-welcome.desktop
+rm -f /usr/lib/x86_64-linux-gnu/qt6/plugins/kf6/kded/kded_plasma-welcome.so
+
+# 8) 输入法：Wayland 下由 KWin 启动 fcitx5（见 /etc/xdg/kwinrc），
+#    不再设置 GTK_IM_MODULE / QT_IM_MODULE，这样就不会弹出“Wayland 诊断”
+if [ -f /etc/default/im-config ]; then
+  sed -i 's/^IM_CONFIG_DEFAULT_MODE=.*/IM_CONFIG_DEFAULT_MODE=none/' /etc/default/im-config
+fi
