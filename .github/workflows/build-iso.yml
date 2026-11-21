@@ -134,4 +134,4 @@ jobs:
           files: |
             out/*
             test-out/*.png
-            demo-out/*
+            docs/videos/SereneCloud-OS-demo.mp4

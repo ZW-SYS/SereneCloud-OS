@@ -46,7 +46,7 @@ run() { # 用 KRunner（Alt+F2）运行一条命令
 }
 
 echo "等待开机（开机菜单 5 秒后自动启动）..."
-sleep 110
+sleep 75
 
 echo "1) Firefox 打开项目主页"
 run "firefox-esr"; sleep 18

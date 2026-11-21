@@ -11,6 +11,7 @@
 
 <p align="center">
   <a href="https://github.com/ZW-SYS/SereneCloud-OS/releases"><b>⬇️ 下载最新版</b></a> ·
+  <a href="#-演示视频">演示视频</a> ·
   <a href="#-功能介绍">功能介绍</a> ·
   <a href="#-安装方法">安装方法</a> ·
   <a href="https://github.com/ZW-SYS/SereneCloud-OS/issues">反馈问题</a>
@@ -30,6 +31,15 @@
 
 ---
 
+## 📺 演示视频
+
+从按下开机键到打开软件的完整过程（虚拟机里自动录制，约 3 分钟，无声音）：
+U 盘开机菜单 → 云朵开机动画 → 桌面 → Firefox 打开本项目主页 → 文件管理器 → 设置里的「关于本系统」→ Root 终端 → Kate 编辑器 → 安装器。
+
+<p align="center">
+  <a href="https://github.com/ZW-SYS/SereneCloud-OS/raw/main/docs/videos/SereneCloud-OS-demo.mp4"><b>▶️ 点这里观看演示视频（MP4，2 MB）</b></a>
+</p>
+
 ## 🎬 开机动画
 
 云朵从四周飘来，慢慢汇聚，最后化成 **SereneCloud**：
@@ -46,23 +56,36 @@
   <img src="docs/images/wallpaper.jpg" width="720" alt="云安壁纸">
 </p>
 
-## 🖥️ 桌面
+## 🖥️ 截图
 
-这是 v0.1.0 在虚拟机里自动开机后的真实截图：云安壁纸、桌面上的「Root 终端」、底部任务栏，欢迎中心里显示的就是 SereneCloud OS。
+下面都是在虚拟机里自动开机后录下来的真实画面。
 
-<p align="center">
-  <img src="docs/images/desktop.png" width="720" alt="云安 OS 桌面">
-</p>
+**U 盘开机菜单**：云安 OS 自己的背景，5 秒后自动启动
+
+<p align="center"><img src="docs/images/boot-menu.png" width="560" alt="开机菜单"></p>
+
+**桌面**：云安壁纸，桌面上有「安装云安 OS」和「Root 终端」
+
+<p align="center"><img src="docs/images/desktop.png" width="720" alt="云安 OS 桌面"></p>
+
+**关于本系统**：显示 SereneCloud OS 云安、作者和本仓库
+
+<p align="center"><img src="docs/images/about.png" width="720" alt="关于本系统"></p>
+
+**安装器**：SereneCloud OS 的 Calamares 安装程序
+
+<p align="center"><img src="docs/images/installer.png" width="720" alt="安装器"></p>
 
 ---
 
 ## ✨ 功能介绍
 
-### 已经有的（v0.1.0）
+### 已经有的（v0.1.1）
 
 | | 功能 | 说明 |
 |---|---|---|
 | ☁️ | **专属开机动画** | 云朵汇聚成 SereneCloud，开机不再是黑屏滚代码 |
+| 🚀 | **云安开机菜单** | U 盘启动菜单也是云安 OS 的样子，5 秒后自动进入系统 |
 | 🎨 | **云安主题** | 自己的壁纸、配色、Logo，登录界面同款风格 |
 | ℹ️ | **关于系统** | 设置里的「关于」页面显示 SereneCloud OS 云安、作者和本仓库 |
 | 🔑 | **管理员免密 sudo** | 第一个用户自动成为管理员，用 sudo 不用每次输密码 |
@@ -72,7 +95,7 @@
 | 📶 | **硬件支持广** | 自带全套固件：Intel / AMD / NVIDIA 显卡，Intel / Realtek / Atheros / Broadcom / MediaTek 无线网卡，声卡，蓝牙，CPU 微码 |
 | 🀄 | **中文开箱即用** | 默认简体中文界面 + fcitx5 拼音输入法 |
 | 📦 | **常用软件** | Firefox 浏览器、Dolphin 文件管理、Kate 编辑器、Okular 阅读器、Gwenview 看图、计算器、截图、分区工具、软件商店 |
-| 🧪 | **每版都自动测试** | 每次构建都会在虚拟机里自动开机测试，并截图存档 |
+| 🧪 | **每版都自动测试** | 每次构建都会在虚拟机里自动开机、打开软件，截图并录制演示视频 |
 
 ### 正在做的
 
@@ -102,11 +125,11 @@
    因为 GitHub 单个文件最大 2 GB，ISO 被切成了 `.part00`、`.part01` 两份，下载后先合并：
    - Windows（在下载文件夹打开命令提示符）：
      ```
-     copy /b SereneCloud-OS-0.1.0-amd64.iso.part00 + SereneCloud-OS-0.1.0-amd64.iso.part01 SereneCloud-OS-0.1.0-amd64.iso
+     copy /b SereneCloud-OS-0.1.1-amd64.iso.part00 + SereneCloud-OS-0.1.1-amd64.iso.part01 SereneCloud-OS-0.1.1-amd64.iso
      ```
    - Linux / macOS：
      ```
-     cat SereneCloud-OS-0.1.0-amd64.iso.part* > SereneCloud-OS-0.1.0-amd64.iso
+     cat SereneCloud-OS-0.1.1-amd64.iso.part* > SereneCloud-OS-0.1.1-amd64.iso
      ```
 2. **校验**（可选）：用 `SHA256SUMS` 里的值核对 ISO 有没有下坏。
 3. **做启动 U 盘**：用 [Ventoy](https://www.ventoy.net)（推荐，把 ISO 拖进 U 盘就行）或 [balenaEtcher](https://etcher.balena.io)。
@@ -129,7 +152,10 @@
 | `config/includes.chroot/` | 直接放进系统里的文件：主题、开机动画、配置 |
 | `config/hooks/` | 构建时运行的脚本：品牌、安装器、清理 |
 | `branding/tools/gen_branding.py` | 用代码生成壁纸、Logo、开机动画每一帧 |
+| `branding/tools/gen_bootsplash.py` | 生成开机菜单背景图 |
 | `tests/boot-test.sh` | 在 QEMU 虚拟机里自动开机测试 |
+| `tests/demo-video.sh` | 在虚拟机里自动操作并录制演示视频 |
+| `config/hooks/normal/*.hook.binary` | 开机菜单的名字、背景和自动启动 |
 | `.github/workflows/build-iso.yml` | GitHub Actions 自动构建、测试、发布 |
 
 ISO 由 GitHub Actions 自动构建：推送到 `main` 会构建并测试，打 `v` 开头的标签就自动发布到 Releases。
