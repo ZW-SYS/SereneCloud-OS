@@ -13,7 +13,8 @@ qemu-system-x86_64 $ACCEL -m 6144 -smp 4 -vga virtio -display none \
   -drive if=pflash,format=raw,readonly=on,file="$CODE" -drive if=pflash,format=raw,file="$WORK/vars.fd" \
   -cdrom "$ISO" -nic user,model=virtio-net-pci -usb -device usb-tablet \
   -chardev socket,id=m1,path="$WORK/cap.sock",server=on,wait=off -mon chardev=m1,mode=readline \
-  -chardev socket,id=m2,path="$WORK/key.sock",server=on,wait=off -mon chardev=m2,mode=readline &
+  -chardev socket,id=m2,path="$WORK/key.sock",server=on,wait=off -mon chardev=m2,mode=readline \
+  -chardev socket,id=m3,path="$WORK/qmp.sock",server=on,wait=off -mon chardev=m3,mode=control &
 QPID=$!
 sleep 1
 
@@ -41,10 +42,20 @@ type_text() { # 一个字一个字地打
     echo "sendkey $k" >&"${KEYS[1]}"; sleep 0.09
   done
 }
-click() { # 鼠标点一下屏幕上的 (x, y)（usb-tablet 用绝对坐标）
-  echo "mouse_move $1 $2" >&"${KEYS[1]}"; sleep 0.2
-  echo "mouse_button 1" >&"${KEYS[1]}"; sleep 0.12
-  echo "mouse_button 0" >&"${KEYS[1]}"; sleep 0.5
+# 鼠标用 QMP 的 input-send-event（绝对坐标 0~32767，对应 usb-tablet）
+mkfifo "$WORK/qmp.in"
+socat - UNIX-CONNECT:"$WORK/qmp.sock" < "$WORK/qmp.in" > "$WORK/qmp.log" 2>&1 &
+exec 7>"$WORK/qmp.in"
+echo '{"execute":"qmp_capabilities"}' >&7
+SW=1280; SH=800
+click() { # 鼠标点一下屏幕上的 (x, y)
+  local ax=$(( $1 * 32767 / SW )) ay=$(( $2 * 32767 / SH ))
+  echo "{\"execute\":\"input-send-event\",\"arguments\":{\"events\":[{\"type\":\"abs\",\"data\":{\"axis\":\"x\",\"value\":$ax}},{\"type\":\"abs\",\"data\":{\"axis\":\"y\",\"value\":$ay}}]}}" >&7
+  sleep 0.25
+  echo '{"execute":"input-send-event","arguments":{"events":[{"type":"btn","data":{"down":true,"button":"left"}}]}}' >&7
+  sleep 0.1
+  echo '{"execute":"input-send-event","arguments":{"events":[{"type":"btn","data":{"down":false,"button":"left"}}]}}' >&7
+  sleep 0.45
 }
 run() { # 用 KRunner（Alt+F2）运行一条命令
   key alt-f2; sleep 1.5; type_text "$1"; sleep 1.5; key ret
@@ -68,7 +79,7 @@ key ctrl-q; sleep 3
 
 echo "3b) 云安设置 → 连点 5 次内核版本 → 彩蛋「帮他们回家」"
 run "serenecloud-settings"; sleep 8
-for n in 1 2 3 4 5; do click 640 452; done
+for n in 1 2 3 4 5; do click 700 450; done
 sleep 16
 key alt-f4; sleep 3
 
@@ -88,6 +99,7 @@ key meta_l-pgdn; sleep 3
 echo "6) 安装器"
 run "calamares-install-debian"; sleep 25
 
+echo "QMP 记录："; tail -5 "$WORK/qmp.log" || true
 kill $CAP 2>/dev/null; kill $QPID 2>/dev/null; wait $QPID 2>/dev/null
 kill "$KEYS_PID" 2>/dev/null || true
 
