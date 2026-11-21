@@ -1,6 +1,12 @@
 ## SereneCloud OS 云安 v0.1.0 · 第一个预览版
 
-基于 Debian 13 (trixie) + KDE Plasma 6。作者：云安。
+**这是我基于 Linux 制作的第 1 个操作系统！** 基于 Debian 13 (trixie) + KDE Plasma 6。作者：云安。
+
+<p align="center"><img src="https://raw.githubusercontent.com/ZW-SYS/SereneCloud-OS/main/docs/images/boot-animation.gif" width="560" alt="开机动画"></p>
+
+<p align="center"><img src="https://raw.githubusercontent.com/ZW-SYS/SereneCloud-OS/main/docs/images/wallpaper.jpg" width="560" alt="云安壁纸"></p>
+
+下方附件里还有虚拟机自动开机测试时的截图（*.png）。
 
 ### 这一版有什么
 - ☁️ 开机动画：云朵从四周飘来，汇聚成 SereneCloud
