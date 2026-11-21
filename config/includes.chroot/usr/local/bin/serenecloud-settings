@@ -1,0 +1,423 @@
+#!/usr/bin/env python3
+# 云安设置 · 关于本系统（SereneCloud OS）
+# 作者：云安  https://github.com/ZW-SYS/SereneCloud-OS
+#
+# 彩蛋：连续点击「内核版本」5 次，会出现「帮他们回家」页面。
+# 页面不保存、不复制任何失踪儿童的照片或个人信息，只提供官方/公益平台的入口，
+# 并注明来源；有线索请拨打 110。
+import os, platform, subprocess, sys, math
+
+from PyQt6.QtCore import (Qt, QTimer, QUrl, QPropertyAnimation, QEasingCurve,
+                          pyqtProperty, QPointF, QRectF)
+from PyQt6.QtGui import (QColor, QDesktopServices, QFont, QIcon, QPainter, QPixmap,
+                         QRadialGradient, QLinearGradient, QPainterPath, QPen, QBrush)
+from PyQt6.QtWidgets import (QApplication, QFrame, QGridLayout, QHBoxLayout, QLabel,
+                             QListWidget, QListWidgetItem, QMainWindow, QPushButton,
+                             QStackedWidget, QVBoxLayout, QWidget, QScrollArea)
+
+BLUE = "#4F8CC9"
+REPO = "https://github.com/ZW-SYS/SereneCloud-OS"
+LOGO = "/usr/share/serenecloud/serenecloud-logo.png"
+TAPS_NEEDED = 5
+
+# 失踪儿童信息入口（只放链接，不抓取、不保存任何人的信息）
+SOURCES = [
+    ("公安部儿童失踪信息紧急发布平台",
+     "公安部刑侦局「团圆」系统发布的失踪儿童信息（央视影音页面）",
+     "https://app.cctv.com/special/cbox/childrenlist/index.html"),
+    ("宝贝回家寻子网",
+     "宝贝回家志愿者协会的公益寻人网站：家寻宝贝、宝贝寻家",
+     "https://www.baobeihuijia.com/"),
+]
+
+
+def read_os_release():
+    d = {}
+    try:
+        for line in open("/etc/os-release", encoding="utf-8"):
+            if "=" in line:
+                k, v = line.rstrip("\n").split("=", 1)
+                d[k] = v.strip('"')
+    except OSError:
+        pass
+    return d
+
+
+def cmd_out(args):
+    try:
+        return subprocess.run(args, capture_output=True, text=True, timeout=3).stdout.strip()
+    except Exception:
+        return ""
+
+
+def plasma_version():
+    out = cmd_out(["plasmashell", "--version"])
+    return out.split()[-1] if out else "6"
+
+
+def debian_version():
+    try:
+        return open("/etc/debian_version").read().strip()
+    except OSError:
+        return "13"
+
+
+def mem_text():
+    try:
+        for line in open("/proc/meminfo"):
+            if line.startswith("MemTotal"):
+                return f"{int(line.split()[1]) / 1024 / 1024:.1f} GB"
+    except OSError:
+        pass
+    return "未知"
+
+
+def cpu_text():
+    try:
+        for line in open("/proc/cpuinfo"):
+            if line.startswith("model name"):
+                return line.split(":", 1)[1].strip()
+    except OSError:
+        pass
+    return platform.processor() or "未知"
+
+
+# ───────────────────────── 关于本系统 ─────────────────────────
+class InfoRow(QFrame):
+    def __init__(self, key, value, clickable=False):
+        super().__init__()
+        self.setObjectName("row")
+        lay = QHBoxLayout(self)
+        lay.setContentsMargins(18, 0, 18, 0)
+        k = QLabel(key); k.setObjectName("key")
+        lay.addWidget(k)
+        lay.addStretch(1)
+        if clickable:
+            self.value = QPushButton(value); self.value.setObjectName("valueBtn")
+            self.value.setCursor(Qt.CursorShape.PointingHandCursor)
+            self.value.setFlat(True)
+        else:
+            self.value = QLabel(value); self.value.setObjectName("value")
+            self.value.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
+        lay.addWidget(self.value)
+        self.setFixedHeight(48)
+        self.on_click = None
+        if clickable:   # 整行都可以点
+            self.setCursor(Qt.CursorShape.PointingHandCursor)
+            self.value.clicked.connect(lambda: self.on_click and self.on_click())
+
+    def mousePressEvent(self, e):
+        if self.on_click:
+            self.on_click()
+        super().mousePressEvent(e)
+
+
+class AboutPage(QWidget):
+    def __init__(self, on_egg):
+        super().__init__()
+        self.on_egg = on_egg
+        self.taps = 0
+        osr = read_os_release()
+        lay = QVBoxLayout(self)
+        lay.setContentsMargins(40, 24, 40, 24)
+        lay.setSpacing(0)
+
+        head = QHBoxLayout()
+        logo = QLabel()
+        if os.path.exists(LOGO):
+            logo.setPixmap(QPixmap(LOGO).scaled(96, 96, Qt.AspectRatioMode.KeepAspectRatio,
+                                                Qt.TransformationMode.SmoothTransformation))
+        logo.setFixedSize(104, 104)
+        head.addWidget(logo)
+        tbox = QVBoxLayout()
+        name = QLabel(osr.get("PRETTY_NAME", "SereneCloud OS 云安")); name.setObjectName("title")
+        sub = QLabel("作者：云安 · 基于 Debian " + debian_version() + " · KDE Plasma " + plasma_version())
+        sub.setObjectName("sub")
+        tbox.addStretch(1); tbox.addWidget(name); tbox.addWidget(sub); tbox.addStretch(1)
+        head.addLayout(tbox); head.addStretch(1)
+        headw = QWidget(); headw.setLayout(head); headw.setFixedHeight(128)
+        lay.addWidget(headw)
+        lay.addSpacing(16)
+
+        sec = QLabel("软件"); sec.setObjectName("section"); sec.setFixedHeight(32)
+        lay.addWidget(sec)
+        card = QFrame(); card.setObjectName("card")
+        cl = QVBoxLayout(card); cl.setContentsMargins(0, 4, 0, 4); cl.setSpacing(0)
+        rows = [
+            ("系统名称", "SereneCloud OS（云安 OS）"),
+            ("系统版本", osr.get("VERSION", "0.1.1")),
+            ("基于", "Debian " + debian_version() + " (trixie)"),
+            ("桌面", "KDE Plasma " + plasma_version()),
+        ]
+        for k, v in rows:
+            cl.addWidget(InfoRow(k, v))
+        self.kernel = InfoRow("内核版本", platform.release(), clickable=True)
+        self.kernel.on_click = self.tap
+        cl.addWidget(self.kernel)
+        lay.addWidget(card)
+        lay.addSpacing(16)
+
+        sec2 = QLabel("硬件"); sec2.setObjectName("section"); sec2.setFixedHeight(32)
+        lay.addWidget(sec2)
+        card2 = QFrame(); card2.setObjectName("card")
+        c2 = QVBoxLayout(card2); c2.setContentsMargins(0, 4, 0, 4); c2.setSpacing(0)
+        c2.addWidget(InfoRow("处理器", cpu_text()))
+        c2.addWidget(InfoRow("内存", mem_text()))
+        lay.addWidget(card2)
+        lay.addSpacing(16)
+
+        link = QPushButton("在 GitHub 上查看源码：" + REPO.replace("https://", ""))
+        link.setObjectName("link"); link.setFlat(True)
+        link.setCursor(Qt.CursorShape.PointingHandCursor)
+        link.clicked.connect(lambda: QDesktopServices.openUrl(QUrl(REPO)))
+        lay.addWidget(link, alignment=Qt.AlignmentFlag.AlignLeft)
+        lay.addStretch(1)
+
+        self.toast = QLabel("", self); self.toast.setObjectName("toast")
+        self.toast.hide()
+        self.toast_timer = QTimer(self, singleShot=True, interval=1400, timeout=self.toast.hide)
+        self.reset_timer = QTimer(self, singleShot=True, interval=3000, timeout=self.reset)
+
+    def reset(self):
+        self.taps = 0
+
+    def show_toast(self, text):
+        self.toast.setText(text)
+        self.toast.adjustSize()
+        self.toast.move((self.width() - self.toast.width()) // 2, self.height() - 90)
+        self.toast.show(); self.toast.raise_()
+        self.toast_timer.start()
+
+    def tap(self):
+        self.taps += 1
+        self.reset_timer.start()
+        left = TAPS_NEEDED - self.taps
+        if left <= 0:
+            self.taps = 0
+            self.toast.hide()
+            self.on_egg()
+        elif self.taps >= 2:
+            self.show_toast(f"再点 {left} 次……")
+
+
+# ───────────────────────── 彩蛋：帮他们回家 ─────────────────────────
+class LampScene(QWidget):
+    """夜空里一盏灯慢慢亮起来，然后出现「帮他们回家」。"""
+
+    def __init__(self):
+        super().__init__()
+        self._glow = 0.0
+        self._text = 0.0
+        self.setMinimumHeight(300)
+        self.a1 = QPropertyAnimation(self, b"glow", duration=2600,
+                                     startValue=0.0, endValue=1.0,
+                                     easingCurve=QEasingCurve.Type.InOutCubic)
+        self.a2 = QPropertyAnimation(self, b"textAlpha", duration=1600,
+                                     startValue=0.0, endValue=1.0)
+        self.a1.finished.connect(self.a2.start)
+        self.flicker = 0
+        self.ft = QTimer(self, interval=60, timeout=self._tick)
+
+    def start(self):
+        self._glow = 0.0; self._text = 0.0; self.flicker = 0
+        self.update()
+        QTimer.singleShot(500, self.a1.start)
+        self.ft.start()
+
+    def _tick(self):
+        self.flicker += 1
+        self.update()
+
+    def getGlow(self): return self._glow
+    def setGlow(self, v): self._glow = v; self.update()
+    glow = pyqtProperty(float, getGlow, setGlow)
+
+    def getText(self): return self._text
+    def setText(self, v): self._text = v; self.update()
+    textAlpha = pyqtProperty(float, getText, setText)
+
+    def paintEvent(self, e):
+        p = QPainter(self)
+        p.setRenderHint(QPainter.RenderHint.Antialiasing)
+        w, h = self.width(), self.height()
+        g = self._glow
+        # 夜空
+        bg = QLinearGradient(0, 0, 0, h)
+        bg.setColorAt(0, QColor(8, 14, 30)); bg.setColorAt(1, QColor(20, 34, 64))
+        p.fillRect(self.rect(), bg)
+        # 星星
+        p.setPen(Qt.PenStyle.NoPen)
+        for i in range(60):
+            x = (i * 137.5) % w; y = (i * 71.3) % (h * 0.7)
+            a = 80 + int(70 * math.sin(self.flicker * 0.08 + i))
+            p.setBrush(QColor(255, 255, 255, max(20, a)))
+            p.drawEllipse(QPointF(x, y), 1.2, 1.2)
+        cx, top = w / 2, 10
+        # 灯光
+        if g > 0:
+            fl = 1.0 + 0.03 * math.sin(self.flicker * 0.5)
+            r = (60 + 260 * g) * fl
+            rg = QRadialGradient(QPointF(cx, top + 120), r)
+            rg.setColorAt(0, QColor(255, 214, 130, int(200 * g)))
+            rg.setColorAt(0.4, QColor(255, 190, 90, int(90 * g)))
+            rg.setColorAt(1, QColor(255, 180, 80, 0))
+            p.setBrush(QBrush(rg))
+            p.drawEllipse(QPointF(cx, top + 120), r, r)
+        # 灯杆和灯罩
+        p.setBrush(QColor(60, 70, 90))
+        p.drawRect(QRectF(cx - 2, 0, 4, top + 70))
+        shade = QPainterPath()
+        shade.moveTo(cx - 18, top + 70); shade.lineTo(cx + 18, top + 70)
+        shade.lineTo(cx + 46, top + 112); shade.lineTo(cx - 46, top + 112); shade.closeSubpath()
+        p.setBrush(QColor(90, 100, 124)); p.drawPath(shade)
+        bulb = QColor(255, 236, 180) if g > 0.05 else QColor(70, 76, 92)
+        bulb.setAlpha(255)
+        p.setBrush(bulb)
+        p.drawEllipse(QPointF(cx, top + 116), 14, 10)
+        # 光照到地面
+        if g > 0:
+            beam = QPainterPath()
+            beam.moveTo(cx - 46, top + 112); beam.lineTo(cx + 46, top + 112)
+            beam.lineTo(cx + 220, h - 40); beam.lineTo(cx - 220, h - 40); beam.closeSubpath()
+            lg = QLinearGradient(0, top + 112, 0, h - 40)
+            lg.setColorAt(0, QColor(255, 220, 150, int(110 * g)))
+            lg.setColorAt(1, QColor(255, 220, 150, 0))
+            p.setBrush(QBrush(lg)); p.drawPath(beam)
+        # 文字
+        if self._text > 0:
+            f = QFont(); f.setPixelSize(52); f.setBold(True); f.setLetterSpacing(QFont.SpacingType.AbsoluteSpacing, 8)
+            p.setFont(f)
+            p.setPen(QColor(255, 240, 210, int(255 * self._text)))
+            p.drawText(QRectF(0, h - 110, w, 70), Qt.AlignmentFlag.AlignCenter, "帮他们回家")
+        p.end()
+
+
+class EggPage(QWidget):
+    def __init__(self, on_back):
+        super().__init__()
+        self.setObjectName("egg")
+        lay = QVBoxLayout(self); lay.setContentsMargins(0, 0, 0, 0); lay.setSpacing(0)
+        self.scene = LampScene()
+        lay.addWidget(self.scene, 3)
+
+        self.info = QWidget(); self.info.setObjectName("eggInfo")
+        il = QVBoxLayout(self.info); il.setContentsMargins(40, 16, 40, 16); il.setSpacing(10)
+        intro = QLabel("每一个走失的孩子背后，都有一个在等他回家的家庭。"
+                       "多看一眼，也许就能帮一个孩子回家。")
+        intro.setWordWrap(True); intro.setObjectName("eggText")
+        il.addWidget(intro)
+        row = QHBoxLayout(); row.setSpacing(12)
+        for title, desc, url in SOURCES:
+            b = QPushButton(f"{title}\n{desc}")
+            b.setObjectName("source"); b.setCursor(Qt.CursorShape.PointingHandCursor)
+            b.clicked.connect(lambda _=False, u=url: QDesktopServices.openUrl(QUrl(u)))
+            row.addWidget(b)
+        il.addLayout(row)
+        note = QLabel("以上信息由公安部和宝贝回家寻子网发布，云安 OS 不保存、不复制任何个人信息，需要联网才能打开。"
+                      "看到疑似走失的孩子，请不要自己行动，第一时间报警。")
+        note.setWordWrap(True); note.setObjectName("eggNote")
+        il.addWidget(note)
+        bottom = QHBoxLayout()
+        call = QLabel("有线索请拨 110"); call.setObjectName("call")
+        bottom.addWidget(call); bottom.addStretch(1)
+        back = QPushButton("返回"); back.setObjectName("back"); back.clicked.connect(on_back)
+        bottom.addWidget(back)
+        il.addLayout(bottom)
+        self.info_op = 0.0
+        lay.addWidget(self.info, 2)
+        self.info.hide()
+        self.scene.a2.finished.connect(self.info.show)
+
+    def start(self):
+        self.info.hide()
+        self.scene.start()
+
+
+# ───────────────────────── 主窗口 ─────────────────────────
+KCMS = [  # 侧边栏里其它项目直接打开 KDE 对应的设置
+    ("network-wired", "网络", "kcm_networkmanagement"),
+    ("preferences-desktop-display", "显示", "kcm_kscreen"),
+    ("audio-volume-high", "声音", "kcm_pulseaudio"),
+    ("preferences-desktop-wallpaper", "外观", "kcm_lookandfeel"),
+    ("system-users", "用户", "kcm_users"),
+    ("preferences-system", "全部设置", None),
+]
+
+
+class Main(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("云安设置 · 关于本系统")
+        self.setWindowIcon(QIcon.fromTheme("serenecloud", QIcon(LOGO)))
+        root = QWidget(); hl = QHBoxLayout(root); hl.setContentsMargins(0, 0, 0, 0); hl.setSpacing(0)
+        self.side = QListWidget(); self.side.setObjectName("side"); self.side.setFixedWidth(200)
+        about = QListWidgetItem(QIcon.fromTheme("serenecloud", QIcon(LOGO)), "关于本系统")
+        self.side.addItem(about)
+        for icon, name, kcm in KCMS:
+            it = QListWidgetItem(QIcon.fromTheme(icon), name); it.setData(Qt.ItemDataRole.UserRole, kcm or "")
+            self.side.addItem(it)
+        self.side.setCurrentRow(0)
+        self.side.itemClicked.connect(self.side_click)
+        hl.addWidget(self.side)
+        self.stack = QStackedWidget()
+        self.about = AboutPage(self.show_egg)
+        self.egg = EggPage(self.show_about)
+        self.stack.addWidget(self.about); self.stack.addWidget(self.egg)
+        hl.addWidget(self.stack, 1)
+        self.setCentralWidget(root)
+
+    def side_click(self, item):
+        if self.side.row(item) == 0:
+            self.show_about(); return
+        kcm = item.data(Qt.ItemDataRole.UserRole)
+        subprocess.Popen(["systemsettings"] + ([kcm] if kcm else []))
+        self.side.setCurrentRow(0)
+
+    def show_egg(self):
+        self.stack.setCurrentWidget(self.egg)
+        self.side.hide()
+        self.egg.start()
+
+    def show_about(self):
+        self.side.show()
+        self.stack.setCurrentWidget(self.about)
+
+
+QSS = f"""
+QMainWindow, #side {{ background: #f4f7fb; }}
+#side {{ border: none; border-right: 1px solid #dfe6ef; padding: 10px 6px; font-size: 15px; }}
+#side::item {{ height: 40px; border-radius: 8px; padding-left: 8px; }}
+#side::item:selected {{ background: {BLUE}; color: white; }}
+#title {{ font-size: 26px; font-weight: bold; color: #1b2b44; }}
+#sub {{ font-size: 14px; color: #5b6b82; }}
+#section {{ font-size: 14px; font-weight: bold; color: {BLUE}; padding-left: 4px; }}
+#card {{ background: white; border: 1px solid #e2e8f0; border-radius: 12px; }}
+#row {{ border-bottom: 1px solid #eef2f7; }}
+#key {{ font-size: 15px; color: #33415c; }}
+#value {{ font-size: 15px; color: #5b6b82; }}
+#valueBtn {{ font-size: 15px; color: #5b6b82; border: none; padding: 8px 4px; text-align: right; }}
+#valueBtn:hover {{ color: {BLUE}; }}
+#link {{ color: {BLUE}; font-size: 14px; border: none; text-align: left; padding: 0; }}
+#toast {{ background: rgba(27,43,68,220); color: white; border-radius: 16px; padding: 8px 18px; font-size: 15px; }}
+#eggInfo {{ background: #142240; }}
+#eggText {{ color: #f3e7cf; font-size: 17px; }}
+#eggNote {{ color: #9fb0cc; font-size: 13px; }}
+#source {{ background: #1f3360; color: #ffe9bf; border: 1px solid #3a5288; border-radius: 12px;
+          padding: 12px 16px; font-size: 14px; text-align: left; }}
+#source:hover {{ background: #28407a; }}
+#call {{ color: #ffcf70; font-size: 22px; font-weight: bold; }}
+#back {{ background: transparent; color: #cfd9ea; border: 1px solid #4a6090; border-radius: 8px; padding: 6px 20px; font-size: 14px; }}
+"""
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    app.setApplicationName("serenecloud-settings")
+    app.setDesktopFileName("serenecloud-settings")
+    app.setStyleSheet(QSS)
+    w = Main()
+    w.resize(1100, 720)
+    if "--egg" in sys.argv:       # 方便截图测试
+        w.show(); w.show_egg()
+    else:
+        w.showMaximized()
+    sys.exit(app.exec())

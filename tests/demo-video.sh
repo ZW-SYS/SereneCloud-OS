@@ -11,7 +11,7 @@ CODE=/usr/share/OVMF/OVMF_CODE_4M.fd; [ -f "$CODE" ] || CODE=/usr/share/OVMF/OVM
 
 qemu-system-x86_64 $ACCEL -m 6144 -smp 4 -vga virtio -display none \
   -drive if=pflash,format=raw,readonly=on,file="$CODE" -drive if=pflash,format=raw,file="$WORK/vars.fd" \
-  -cdrom "$ISO" -nic user,model=virtio-net-pci \
+  -cdrom "$ISO" -nic user,model=virtio-net-pci -usb -device usb-tablet \
   -chardev socket,id=m1,path="$WORK/cap.sock",server=on,wait=off -mon chardev=m1,mode=readline \
   -chardev socket,id=m2,path="$WORK/key.sock",server=on,wait=off -mon chardev=m2,mode=readline &
 QPID=$!
@@ -41,6 +41,11 @@ type_text() { # 一个字一个字地打
     echo "sendkey $k" >&"${KEYS[1]}"; sleep 0.09
   done
 }
+click() { # 鼠标点一下屏幕上的 (x, y)（usb-tablet 用绝对坐标）
+  echo "mouse_move $1 $2" >&"${KEYS[1]}"; sleep 0.2
+  echo "mouse_button 1" >&"${KEYS[1]}"; sleep 0.12
+  echo "mouse_button 0" >&"${KEYS[1]}"; sleep 0.5
+}
 run() { # 用 KRunner（Alt+F2）运行一条命令
   key alt-f2; sleep 1.5; type_text "$1"; sleep 1.5; key ret
 }
@@ -60,6 +65,12 @@ key ctrl-q; sleep 3
 echo "3) 设置 → 关于本系统"
 run "systemsettings kcm_about-distro"; sleep 12
 key ctrl-q; sleep 3
+
+echo "3b) 云安设置 → 连点 5 次内核版本 → 彩蛋「帮他们回家」"
+run "serenecloud-settings"; sleep 8
+for n in 1 2 3 4 5; do click 640 452; done
+sleep 16
+key alt-f4; sleep 3
 
 echo "4) Root 终端"
 run "serenecloud-root-terminal"; sleep 6

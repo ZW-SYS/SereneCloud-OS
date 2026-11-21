@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=Application
+Name=SereneCloud Settings
+Name[zh_CN]=云安设置
+GenericName=About this system
+GenericName[zh_CN]=关于本系统
+Comment=About SereneCloud OS and quick settings
+Comment[zh_CN]=查看云安 OS 的版本信息，快速打开常用设置
+Exec=serenecloud-settings
+Icon=serenecloud
+Terminal=false
+Categories=Settings;System;
+Keywords=about;version;settings;关于;版本;设置;云安;
