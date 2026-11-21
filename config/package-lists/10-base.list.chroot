@@ -1,0 +1,23 @@
+# 基础系统 + Live + 安装器
+live-boot
+live-config
+live-config-systemd
+calamares
+calamares-settings-debian
+sudo
+locales
+console-setup
+keyboard-configuration
+network-manager
+bash-completion
+curl
+wget
+ca-certificates
+gnupg
+htop
+nano
+vim
+git
+unzip
+p7zip-full
+xorriso

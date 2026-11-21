@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Root Terminal
+Name[zh_CN]=Root 终端
+Comment=Open a root shell (admin only)
+Comment[zh_CN]=打开拥有最高权限的终端（仅管理员）
+Exec=serenecloud-root-terminal
+Icon=utilities-terminal
+Terminal=false
+Categories=System;TerminalEmulator;

@@ -1,0 +1,40 @@
+# 云安 OS 开机动画（Plymouth script）
+Window.SetBackgroundTopColor(0.055, 0.141, 0.259);
+Window.SetBackgroundBottomColor(0.180, 0.408, 0.620);
+
+NFRAMES = 60;
+LOOP_FROM = 50;
+for (i = 0; i < NFRAMES; i++) {
+  if (i < 10) name = "frame-0" + i + ".png"; else name = "frame-" + i + ".png";
+  frames[i] = Image(name);
+}
+sprite = Sprite(frames[0]);
+sprite.SetX(Window.GetX() + Window.GetWidth() / 2 - frames[0].GetWidth() / 2);
+sprite.SetY(Window.GetY() + Window.GetHeight() / 2 - frames[0].GetHeight() / 2);
+
+logo = Sprite(Image("logo-small.png"));
+logo.SetX(Window.GetX() + Window.GetWidth() / 2 - 24);
+logo.SetY(Window.GetY() + Window.GetHeight() - 90);
+logo.SetOpacity(0.8);
+
+tick = 0;
+fun refresh_cb() {
+  tick++;
+  f = Math.Int(tick / 2);               # 50fps 刷新 → 25fps 动画
+  if (f >= NFRAMES) f = LOOP_FROM + (f - LOOP_FROM) % (NFRAMES - LOOP_FROM);
+  sprite.SetImage(frames[f]);
+}
+Plymouth.SetRefreshFunction(refresh_cb);
+
+# 密码框（磁盘加密时用）
+fun display_password_cb(prompt, bullets) {
+  pw = "";
+  for (i = 0; i < bullets; i++) pw += "●";
+  msg = Image.Text(prompt + "  " + pw, 1, 1, 1);
+  msgsprite = Sprite(msg);
+  msgsprite.SetX(Window.GetX() + Window.GetWidth() / 2 - msg.GetWidth() / 2);
+  msgsprite.SetY(Window.GetY() + Window.GetHeight() * 0.72);
+}
+Plymouth.SetDisplayPasswordFunction(display_password_cb);
+fun display_normal_cb() { msgsprite = NULL; }
+Plymouth.SetDisplayNormalFunction(display_normal_cb);

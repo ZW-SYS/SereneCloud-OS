@@ -1,0 +1,9 @@
+{
+  "KPlugin": {
+    "Authors": [{ "Name": "云安" }],
+    "Id": "SereneCloud",
+    "License": "CC-BY-SA-4.0",
+    "Name": "SereneCloud",
+    "Name[zh_CN]": "云安"
+  }
+}

@@ -1,0 +1,8 @@
+[Plymouth Theme]
+Name=SereneCloud
+Description=云安 OS 开机动画：云朵汇聚成 SereneCloud
+ModuleName=script
+
+[script]
+ImageDir=/usr/share/plymouth/themes/serenecloud
+ScriptFile=/usr/share/plymouth/themes/serenecloud/serenecloud.script

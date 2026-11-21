@@ -1,0 +1,14 @@
+{
+  "KPackageStructure": "Plasma/LookAndFeel",
+  "KPlugin": {
+    "Authors": [{ "Name": "云安" }],
+    "Description": "SereneCloud OS default look",
+    "Description[zh_CN]": "云安 OS 默认外观",
+    "Id": "org.serenecloud.desktop",
+    "License": "GPL-3.0-or-later",
+    "Name": "SereneCloud",
+    "Name[zh_CN]": "云安",
+    "Website": "https://github.com/ZW-SYS/SereneCloud-OS"
+  },
+  "X-Plasma-APIVersion": "2"
+}

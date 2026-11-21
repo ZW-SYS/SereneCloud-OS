@@ -1,0 +1,29 @@
+#!/bin/sh
+# 安装器 Calamares 换成云安 OS 品牌；第一个用户 = 管理员（sudo 组，免密码）
+set -e
+B=/etc/calamares/branding
+if [ -d "$B/debian" ]; then
+  rm -rf "$B/serenecloud"
+  cp -a "$B/debian" "$B/serenecloud"
+  D="$B/serenecloud/branding.desc"
+  sed -i -e 's/^componentName:.*/componentName:  serenecloud/' \
+         -e 's/^\( *productName:\).*/\1         "SereneCloud OS"/' \
+         -e 's/^\( *shortProductName:\).*/\1    "SereneCloud"/' \
+         -e 's/^\( *versionedName:\).*/\1       "SereneCloud OS 0.1"/' \
+         -e 's/^\( *shortVersionedName:\).*/\1  "SereneCloud 0.1"/' \
+         -e 's/^\( *bootloaderEntryName:\).*/\1 "SereneCloud"/' \
+         -e 's|^\( *productUrl:\).*|\1          "https://github.com/ZW-SYS/SereneCloud-OS"|' \
+         -e 's|^\( *supportUrl:\).*|\1          "https://github.com/ZW-SYS/SereneCloud-OS/issues"|' \
+         -e 's|^\( *knownIssuesUrl:\).*|\1      "https://github.com/ZW-SYS/SereneCloud-OS/issues"|' \
+         -e 's|^\( *releaseNotesUrl:\).*|\1     "https://github.com/ZW-SYS/SereneCloud-OS/releases"|' "$D"
+  # 换 logo
+  for img in $(grep -oE '(productLogo|productIcon): *"[^"]+"' "$D" | sed 's/.*"\(.*\)"/\1/'); do
+    cp /usr/share/serenecloud/serenecloud-logo.png "$B/serenecloud/$img"
+  done
+  sed -i 's/^branding:.*/branding: serenecloud/' /etc/calamares/settings.conf
+fi
+U=/etc/calamares/modules/users.conf
+if [ -f "$U" ]; then
+  grep -q '^sudoersGroup:' "$U" && sed -i 's/^sudoersGroup:.*/sudoersGroup: sudo/' "$U" || echo 'sudoersGroup: sudo' >> "$U"
+  sed -i 's/^doAutologin:.*/doAutologin: false/' "$U"
+fi

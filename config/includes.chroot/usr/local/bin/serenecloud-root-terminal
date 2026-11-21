@@ -1,0 +1,7 @@
+#!/bin/sh
+# 一键 Root 终端：用 sudo 打开 root shell（不需要用 root 账号登录）
+if ! id -nG | grep -qw sudo; then
+  kdialog --title "Root 终端" --error "你不是管理员账户，不能打开 Root 终端。\n请让管理员在 设置 → 用户 里把你设为管理员。" 2>/dev/null
+  exit 1
+fi
+exec konsole --separate -p "tabtitle=Root 终端" -e sudo -i

@@ -1,0 +1,42 @@
+#!/bin/sh
+# 云安 OS 品牌：系统名称、外观、颜色、开机动画
+set -e
+
+# 1) os-release（用 dpkg-divert，升级 base-files 时不会被覆盖）
+dpkg-divert --local --rename --add /usr/lib/os-release
+cp /usr/share/serenecloud/os-release /usr/lib/os-release
+ln -sf ../usr/lib/os-release /etc/os-release
+echo "SereneCloud OS 0.1 \\n \\l" > /etc/issue
+echo "SereneCloud OS 0.1" > /etc/issue.net
+
+# 2) 配色：基于 Breeze Light，换成云安蓝 #4F8CC9
+cp /usr/share/color-schemes/BreezeLight.colors /usr/share/color-schemes/SereneCloud.colors
+sed -i -e 's/^Name=.*/Name=SereneCloud/' -e '/^Name\[/d' \
+       -e 's/61,174,233/79,140,201/g' /usr/share/color-schemes/SereneCloud.colors
+
+# 3) 全局主题：复制 Breeze 的布局，换上我们自己的默认设置
+LNF=/usr/share/plasma/look-and-feel
+rm -rf "$LNF/org.serenecloud.desktop"
+cp -a "$LNF/org.kde.breeze.desktop" "$LNF/org.serenecloud.desktop"
+rm -f "$LNF/org.serenecloud.desktop/metadata.desktop"
+cp /usr/share/serenecloud/lnf/metadata.json "$LNF/org.serenecloud.desktop/metadata.json"
+cp /usr/share/serenecloud/lnf/defaults "$LNF/org.serenecloud.desktop/contents/defaults"
+
+# 4) 开机动画
+plymouth-set-default-theme serenecloud
+update-initramfs -u -k all
+
+# 5) 登录界面背景
+mkdir -p /usr/share/sddm/themes/breeze
+cat > /usr/share/sddm/themes/breeze/theme.conf.user <<CONF
+[General]
+background=/usr/share/wallpapers/SereneCloud/contents/images/3840x2160.jpg
+type=image
+CONF
+
+# 6) 默认中文
+sed -i 's/^# *zh_CN.UTF-8 UTF-8/zh_CN.UTF-8 UTF-8/; s/^# *en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
+locale-gen
+update-locale LANG=zh_CN.UTF-8
+
+gtk-update-icon-cache -f /usr/share/icons/hicolor || true

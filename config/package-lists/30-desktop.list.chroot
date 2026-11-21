@@ -1,0 +1,40 @@
+# KDE Plasma 桌面
+kde-plasma-desktop
+sddm
+sddm-theme-breeze
+kde-config-sddm
+plasma-nm
+plasma-pa
+plasma-discover
+plasma-systemmonitor
+bluedevil
+powerdevil
+kscreen
+kinfocenter
+systemsettings
+accountsservice
+konsole
+dolphin
+kate
+ark
+okular
+gwenview
+kde-spectacle
+kcalc
+partitionmanager
+firefox-esr
+firefox-esr-l10n-zh-cn
+pipewire-audio
+xdg-desktop-portal-kde
+# 开机动画
+plymouth
+plymouth-themes
+# 中文
+fonts-noto-cjk
+fonts-noto-color-emoji
+fcitx5
+fcitx5-chinese-addons
+fcitx5-frontend-qt6
+fcitx5-frontend-gtk3
+kde-config-fcitx5
+im-config

@@ -1,0 +1,2 @@
+# 云安 OS：管理员（sudo 组）使用 sudo 不需要输入密码
+%sudo ALL=(ALL:ALL) NOPASSWD: ALL

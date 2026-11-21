@@ -1,0 +1,13 @@
+PRETTY_NAME="SereneCloud OS 0.1 (云安)"
+NAME="SereneCloud OS"
+VERSION_ID="0.1"
+VERSION="0.1 (云安, based on Debian 13 trixie)"
+VERSION_CODENAME=trixie
+DEBIAN_VERSION_CODENAME=trixie
+ID=serenecloud
+ID_LIKE=debian
+LOGO=serenecloud
+ANSI_COLOR="38;2;79;140;201"
+HOME_URL="https://github.com/ZW-SYS/SereneCloud-OS"
+SUPPORT_URL="https://github.com/ZW-SYS/SereneCloud-OS/issues"
+BUG_REPORT_URL="https://github.com/ZW-SYS/SereneCloud-OS/issues"

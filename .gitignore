@@ -1,0 +1,17 @@
+# live-build 产物
+.build/
+cache/
+chroot/
+binary/
+*.iso
+*.contents
+*.files
+*.packages
+*.log
+config/binary
+config/bootstrap
+config/chroot
+config/common
+config/source
+out/
+test-out/

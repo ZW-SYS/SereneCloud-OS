@@ -1,0 +1,13 @@
+#!/bin/sh
+# 只在 Live 模式下运行：把“安装云安 OS”图标放到试用桌面上
+. /lib/live/config.sh 2>/dev/null || true
+USER_NAME="${LIVE_USERNAME:-yunan}"
+DESK="/home/${USER_NAME}/Desktop"
+[ -d "/home/${USER_NAME}" ] || exit 0
+mkdir -p "$DESK"
+for f in /usr/share/applications/install-debian.desktop; do
+  [ -f "$f" ] || continue
+  sed -e 's/^Name=.*/Name=安装云安 OS/' -e 's/^Name\[[^]]*\]=.*//' -e 's/^Icon=.*/Icon=serenecloud/' "$f" > "$DESK/install-serenecloud.desktop"
+  chmod +x "$DESK/install-serenecloud.desktop"
+done
+chown -R "${USER_NAME}:${USER_NAME}" "$DESK"
