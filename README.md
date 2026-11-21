@@ -6,13 +6,14 @@
 
 - 作者：**云安**
 - 适用：普通电脑（x86_64，UEFI 和传统 BIOS 都能启动）以及虚拟机
-- 下载：见 [Releases](https://github.com/ZW-SYS/SereneCloud-OS/releases)
+- 下载：见 [Releases](https://github.com/ZW-SYS/SereneCloud-OS/releases)（最新：v0.1.0 预览版）
+- 试用账户：`yunan`，不需要密码
 
 ## 特点（规划中，按阶段完成）
 
 | 阶段 | 内容 | 状态 |
 |---|---|---|
-| 1 | 可启动的 Live + 安装器（Calamares）、开机动画（云朵汇聚成 SereneCloud）、云安主题与壁纸、多用户、管理员免密 sudo + 一键 Root 终端、全套硬件固件 | 🚧 进行中 |
+| 1 | 可启动的 Live + 安装器（Calamares）、开机动画（云朵汇聚成 SereneCloud）、云安主题与壁纸、多用户、管理员免密 sudo + 一键 Root 终端、全套硬件固件 | ✅ v0.1.0 |
 | 2 | 更丰富的侧边栏/面板小部件和设置；内置代码运行器（HTML/CSS/JS、Python、C、C++、Java、Node.js、Go、Rust、Shell，全部离线自带）；Wine 运行 Windows 程序；20 个常用软件安装+启动测试 | ⏳ |
 | 3 | 彩蛋 | ⏳ |
 | 4 | 实验性：运行安卓 APK（Waydroid） | ⏳ |
