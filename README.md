@@ -40,6 +40,14 @@ U 盘开机菜单 → 云朵开机动画 → 桌面 → Firefox 打开本项目�
   <a href="https://github.com/ZW-SYS/SereneCloud-OS/raw/main/docs/videos/SereneCloud-OS-demo.mp4"><b>▶️ 点这里观看演示视频（MP4，2 MB）</b></a>
 </p>
 
+### 🥚 彩蛋
+
+打开桌面上的「云安设置」，连续点 5 次「内核版本」，一盏灯会慢慢亮起来，出现「帮他们回家」，下面是公安部儿童失踪信息紧急发布平台和宝贝回家寻子网的入口。云安 OS 不保存任何个人信息，只打开官方页面。有线索请拨 110。
+
+<p align="center">
+  <a href="https://github.com/ZW-SYS/SereneCloud-OS/raw/main/docs/videos/SereneCloud-OS-easter-egg.mp4"><b>▶️ 观看彩蛋视频（37 秒）</b></a>
+</p>
+
 ## 🎬 开机动画
 
 云朵从四周飘来，慢慢汇聚，最后化成 **SereneCloud**：
@@ -105,7 +113,6 @@ U 盘开机菜单 → 云朵开机动画 → 桌面 → Firefox 打开本项目�
 | 2 | **内置代码运行器**：一个窗口选语言就能运行，支持 HTML/CSS/JS、Python、C、C++、Java、Node.js、Go、Rust、Shell，全部离线自带 |
 | 2 | **Wine**：直接运行 Windows 的 .exe 程序 |
 | 2 | 20 款常用软件安装 + 启动测试，保证稳定 |
-| 3 | 一个小彩蛋 🥚 |
 | 4 | 实验性：在电脑上运行安卓 APK |
 
 ---
