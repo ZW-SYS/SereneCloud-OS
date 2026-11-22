@@ -69,8 +69,13 @@ run "firefox-esr"; sleep 18
 key ctrl-l; sleep 1; type_text "github.com/ZW-SYS/SereneCloud-OS"; key ret; sleep 16
 key meta_l-pgdn; sleep 3   # 最小化（不关，避免弹出“关闭多个标签页”的确认框）
 
-echo "2) 文件管理器 Dolphin"
-run "dolphin"; sleep 8
+echo "2) 文件管理器「云匣」：双栏 + 缩略图"
+run "yunkit"; sleep 10
+key ctrl-l; sleep 1; type_text "/usr/share/wallpapers/SereneCloud/contents/images"; key ret; sleep 6
+key tab; sleep 1
+key ctrl-l; sleep 1; type_text "/usr/share/serenecloud"; key ret; sleep 6
+key ctrl-3; sleep 4
+key ctrl-1; sleep 2
 key ctrl-q; sleep 3
 
 echo "3) 设置 → 关于本系统"

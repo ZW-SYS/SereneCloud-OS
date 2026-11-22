@@ -1,0 +1,33 @@
+# 云匣（电脑版文件管理器）需要的东西，全部离线装进 ISO
+python3-pyqt6.qsci
+python3-pyqt6.qtsvg
+python3-pyqt6.qtpdf
+python3-pyqt6.qtmultimedia
+python3-pyqt6.qtwebengine
+python3-mutagen
+python3-markdown
+# 缩略图：视频 / PDF 第一页 / APK 图标
+ffmpeg
+ffmpegthumbnailer
+poppler-utils
+aapt
+# 图片格式：WebP、HEIC、AVIF 等
+qt6-image-formats-plugins
+kimageformat6-plugins
+libheif-plugin-libde265
+libheif-plugin-dav1d
+# 压缩包：7z / RAR / ISO 等
+7zip
+7zip-rar
+# U 盘、硬盘、手机（MTP）
+udisks2
+gvfs-backends
+gvfs-fuse
+# Word / Excel / PPT 离线预览（顺便也能编辑）
+libreoffice-writer
+libreoffice-calc
+libreoffice-impress
+libreoffice-qt6
+libreoffice-l10n-zh-cn
+# 代码编辑器字体
+fonts-jetbrains-mono

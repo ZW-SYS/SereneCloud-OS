@@ -1,0 +1,6 @@
+#!/usr/bin/env python3
+# 云匣（电脑版）启动器
+import sys
+sys.path.insert(0, "/usr/lib/serenecloud/yunkit")
+from yunkit.main import main
+sys.exit(main())

@@ -1,0 +1,5 @@
+[Default Applications]
+inode/directory=yunkit.desktop;org.kde.dolphin.desktop;
+
+[Added Associations]
+inode/directory=yunkit.desktop;org.kde.dolphin.desktop;

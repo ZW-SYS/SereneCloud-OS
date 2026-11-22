@@ -35,6 +35,23 @@ jobs:
       - name: 检查包名
         run: python3 tools/check-packages.py
 
+      - name: 云匣自测（Debian 13 容器里，用真正的软件包）
+        run: |
+          mkdir -p yunkit-out
+          sudo docker run --rm -v "$PWD":/w -w /w -e QT_QPA_PLATFORM=offscreen -e QTWEBENGINE_CHROMIUM_FLAGS=--no-sandbox debian:trixie bash -euxc '
+            sed -i "s/^Components: main.*/Components: main contrib non-free non-free-firmware/" /etc/apt/sources.list.d/debian.sources
+            apt-get update
+            DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends python3-pyqt6 python3-pyqt6.qsci \
+              python3-pyqt6.qtsvg python3-pyqt6.qtpdf python3-pyqt6.qtmultimedia python3-pyqt6.qtwebengine python3-mutagen \
+              python3-markdown ffmpeg ffmpegthumbnailer poppler-utils 7zip 7zip-rar aapt qt6-image-formats-plugins \
+              kimageformat6-plugins fonts-noto-cjk fonts-noto-color-emoji fonts-jetbrains-mono
+            python3 tests/yunkit/functional.py
+            python3 tests/yunkit/make-fixtures.py /tmp/ykhome
+            HOME=/tmp/ykhome timeout 300 python3 tests/yunkit/shot.py /w/yunkit-out || echo "截图没有全部完成"
+          '
+          sudo chown -R "$(id -u):$(id -g)" yunkit-out
+          ls -l yunkit-out
+
       - name: 用 live-build 构建（Debian 13 容器）
         run: |
           sudo docker run --rm --privileged -v "$PWD":/build -w /build debian:trixie bash -euxc '
@@ -95,6 +112,7 @@ jobs:
           files: |
             demo-out/*
             test-out/*.png
+            yunkit-out/*.png
 
       - name: 上传测试截图和日志
         if: always()

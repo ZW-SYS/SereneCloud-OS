@@ -1,0 +1,15 @@
+[Desktop Entry]
+Type=Application
+Name=YunKit
+Name[zh_CN]=云匣
+GenericName=File Manager
+GenericName[zh_CN]=文件管理器
+Comment=Dual-pane file manager with thumbnails, archives and previews
+Comment[zh_CN]=双栏文件管理：缩略图、压缩包当文件夹、预览和编辑
+Exec=yunkit %U
+Icon=yunkit
+Terminal=false
+Categories=System;FileManager;Utility;Qt;
+MimeType=inode/directory;
+Keywords=file;manager;files;explorer;文件;管理;云匣;
+StartupWMClass=yunkit

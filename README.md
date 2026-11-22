@@ -109,6 +109,8 @@ U 盘开机菜单 → 云朵开机动画 → 桌面 → Firefox 打开本项目�
 
 | 阶段 | 功能 |
 |---|---|
+| 云匣 ✅ | **云匣（电脑版）文件管理**：默认文件管理器，深色主题，左右双栏 + 多标签，图片/视频/PDF/歌曲封面/APK 图标缩略图，ZIP/7z/RAR/TAR/APK/JAR 当文件夹打开，压缩解压、搜索、批量重命名、回收站、权限、Root 模式，U 盘/硬盘/手机；看图、PDF、Word/Excel/PPT、TXT 小说阅读、Markdown/HTML 预览、代码编辑器、视频播放（已在 main 分支，下个版本发布） |
+| 云匣 | 云匣音乐、APK 反编译和签名、payload/boot.img 解包等逆向工具 |
 | 2 | 更丰富的侧边栏和面板小部件、更完整的设置 |
 | 2 | **内置代码运行器**：一个窗口选语言就能运行，支持 HTML/CSS/JS、Python、C、C++、Java、Node.js、Go、Rust、Shell，全部离线自带 |
 | 2 | **Wine**：直接运行 Windows 的 .exe 程序 |
