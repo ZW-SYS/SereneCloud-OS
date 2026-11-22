@@ -48,6 +48,13 @@ U 盘开机菜单 → 云朵开机动画 → 桌面 → Firefox 打开本项目�
   <a href="https://github.com/ZW-SYS/SereneCloud-OS/raw/main/docs/videos/SereneCloud-OS-easter-egg.mp4"><b>▶️ 观看彩蛋视频（37 秒）</b></a>
 </p>
 
+## 🗂️ 云匣（电脑版）
+
+云匣是我在安卓上做的文件管理器，现在做了电脑版，成了云安 OS 默认的文件管理器。深色界面配云安蓝，左右两栏可以同时开两个文件夹，还能开多个标签。图片、视频、PDF、歌曲封面、APK 图标都直接显示缩略图，一眼就知道是什么。ZIP / 7z / RAR / APK 这些压缩包能像文件夹一样点进去。双击文件就能看图、看 PDF 和 Office、用阅读模式看小说、预览 Markdown 和网页、编辑代码、播放视频。
+
+<p align="center"><img src="docs/images/yunkit-dual.png" width="720" alt="云匣双栏文件管理"></p>
+<p align="center"><img src="docs/images/yunkit-novel.png" width="620" alt="云匣 TXT 小说阅读模式"></p>
+
 ## 🎬 开机动画
 
 云朵从四周飘来，慢慢汇聚，最后化成 **SereneCloud**：
@@ -88,7 +95,7 @@ U 盘开机菜单 → 云朵开机动画 → 桌面 → Firefox 打开本项目�
 
 ## ✨ 功能介绍
 
-### 已经有的（v0.1.1）
+### 已经有的（v0.2.0）
 
 | | 功能 | 说明 |
 |---|---|---|
@@ -102,14 +109,16 @@ U 盘开机菜单 → 云朵开机动画 → 桌面 → Firefox 打开本项目�
 | 💿 | **试用 + 安装** | U 盘启动直接进桌面试用，满意了再点「安装云安 OS」装到硬盘 |
 | 📶 | **硬件支持广** | 自带全套固件：Intel / AMD / NVIDIA 显卡，Intel / Realtek / Atheros / Broadcom / MediaTek 无线网卡，声卡，蓝牙，CPU 微码 |
 | 🀄 | **中文开箱即用** | 默认简体中文界面 + fcitx5 拼音输入法 |
-| 📦 | **常用软件** | Firefox 浏览器、Dolphin 文件管理、Kate 编辑器、Okular 阅读器、Gwenview 看图、计算器、截图、分区工具、软件商店 |
+| 🗂️ | **云匣文件管理** | 我自己做的默认文件管理器：深色、左右双栏 + 多标签、缩略图、压缩包当文件夹打开，能看图、PDF、Office、TXT 小说、Markdown/HTML，编辑代码，播放视频 |
+| 🥚 | **彩蛋** | 「云安设置」里连点 5 次内核版本，帮走失的孩子回家 |
+| 📦 | **常用软件** | Firefox 浏览器、Kate 编辑器、Dolphin（备用文件管理）、Okular 阅读器、Gwenview 看图、计算器、截图、分区工具、软件商店 |
 | 🧪 | **每版都自动测试** | 每次构建都会在虚拟机里自动开机、打开软件，截图并录制演示视频 |
 
 ### 正在做的
 
 | 阶段 | 功能 |
 |---|---|
-| 云匣 ✅ | **云匣（电脑版）文件管理**：默认文件管理器，深色主题，左右双栏 + 多标签，图片/视频/PDF/歌曲封面/APK 图标缩略图，ZIP/7z/RAR/TAR/APK/JAR 当文件夹打开，压缩解压、搜索、批量重命名、回收站、权限、Root 模式，U 盘/硬盘/手机；看图、PDF、Word/Excel/PPT、TXT 小说阅读、Markdown/HTML 预览、代码编辑器、视频播放（已在 main 分支，下个版本发布） |
+| 云匣 ✅ | **云匣（电脑版）文件管理**：默认文件管理器，深色主题，左右双栏 + 多标签，图片/视频/PDF/歌曲封面/APK 图标缩略图，ZIP/7z/RAR/TAR/APK/JAR 当文件夹打开，压缩解压、搜索、批量重命名、回收站、权限、Root 模式，U 盘/硬盘/手机；看图、PDF、Word/Excel/PPT、TXT 小说阅读、Markdown/HTML 预览、代码编辑器、视频播放（已在 v0.2.0 发布） |
 | 云匣 | 云匣音乐、APK 反编译和签名、payload/boot.img 解包等逆向工具 |
 | 2 | 更丰富的侧边栏和面板小部件、更完整的设置 |
 | 2 | **内置代码运行器**：一个窗口选语言就能运行，支持 HTML/CSS/JS、Python、C、C++、Java、Node.js、Go、Rust、Shell，全部离线自带 |
@@ -134,11 +143,11 @@ U 盘开机菜单 → 云朵开机动画 → 桌面 → Firefox 打开本项目�
    因为 GitHub 单个文件最大 2 GB，ISO 被切成了 `.part00`、`.part01` 两份，下载后先合并：
    - Windows（在下载文件夹打开命令提示符）：
      ```
-     copy /b SereneCloud-OS-0.1.1-amd64.iso.part00 + SereneCloud-OS-0.1.1-amd64.iso.part01 SereneCloud-OS-0.1.1-amd64.iso
+     copy /b SereneCloud-OS-0.2.0-amd64.iso.part00 + SereneCloud-OS-0.2.0-amd64.iso.part01 SereneCloud-OS-0.2.0-amd64.iso
      ```
    - Linux / macOS：
      ```
-     cat SereneCloud-OS-0.1.1-amd64.iso.part* > SereneCloud-OS-0.1.1-amd64.iso
+     cat SereneCloud-OS-0.2.0-amd64.iso.part* > SereneCloud-OS-0.2.0-amd64.iso
      ```
 2. **校验**（可选）：用 `SHA256SUMS` 里的值核对 ISO 有没有下坏。
 3. **做启动 U 盘**：用 [Ventoy](https://www.ventoy.net)（推荐，把 ISO 拖进 U 盘就行）或 [balenaEtcher](https://etcher.balena.io)。
@@ -146,7 +155,7 @@ U 盘开机菜单 → 云朵开机动画 → 桌面 → Firefox 打开本项目�
 4. **开机试用**：从 U 盘启动，会自动进入桌面。试用账户 `yunan`，不需要密码。
 5. **安装**：双击桌面上的「安装云安 OS」，按提示一步步来。
 
-> ⚠️ 目前是预览版，只在虚拟机里自动测试过。装到真电脑之前，请先用 U 盘试用模式确认 Wi-Fi、显卡、声音都正常，并备份好重要文件。
+> ⚠️ 目前只在虚拟机里测试过，真电脑请自己测试。装到真电脑之前，请先用 U 盘试用模式确认 Wi-Fi、显卡、声音都正常，并备份好重要文件。
 
 ---
 

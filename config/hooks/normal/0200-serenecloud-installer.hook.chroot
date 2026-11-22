@@ -9,8 +9,8 @@ if [ -d "$B/debian" ]; then
   sed -i -e 's/^componentName:.*/componentName:  serenecloud/' \
          -e 's/^\( *productName:\).*/\1         "SereneCloud OS"/' \
          -e 's/^\( *shortProductName:\).*/\1    "SereneCloud"/' \
-         -e 's/^\( *versionedName:\).*/\1       "SereneCloud OS 0.1.1"/' \
-         -e 's/^\( *shortVersionedName:\).*/\1  "SereneCloud 0.1.1"/' \
+         -e 's/^\( *versionedName:\).*/\1       "SereneCloud OS 0.2.0"/' \
+         -e 's/^\( *shortVersionedName:\).*/\1  "SereneCloud 0.2.0"/' \
          -e 's/^\( *bootloaderEntryName:\).*/\1 "SereneCloud"/' \
          -e 's|^\( *productUrl:\).*|\1          "https://github.com/ZW-SYS/SereneCloud-OS"|' \
          -e 's|^\( *supportUrl:\).*|\1          "https://github.com/ZW-SYS/SereneCloud-OS/issues"|' \

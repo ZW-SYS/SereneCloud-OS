@@ -145,7 +145,7 @@ class AboutPage(QWidget):
         cl = QVBoxLayout(card); cl.setContentsMargins(0, 4, 0, 4); cl.setSpacing(0)
         rows = [
             ("系统名称", "SereneCloud OS（云安 OS）"),
-            ("系统版本", osr.get("VERSION", "0.1.1")),
+            ("系统版本", osr.get("VERSION", "0.2.0")),
             ("基于", "Debian " + debian_version() + " (trixie)"),
             ("桌面", "KDE Plasma " + plasma_version()),
         ]

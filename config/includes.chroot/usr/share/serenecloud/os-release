@@ -1,7 +1,7 @@
-PRETTY_NAME="SereneCloud OS 0.1.1 (云安)"
+PRETTY_NAME="SereneCloud OS 0.2.0 (云安)"
 NAME="SereneCloud OS"
-VERSION_ID="0.1.1"
-VERSION="0.1.1 (云安, based on Debian 13 trixie)"
+VERSION_ID="0.2.0"
+VERSION="0.2.0 (云安, based on Debian 13 trixie)"
 VERSION_CODENAME=trixie
 DEBIAN_VERSION_CODENAME=trixie
 ID=serenecloud
